@@ -8,6 +8,8 @@ import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
@@ -17,7 +19,11 @@ import com.example.kotlinretrofit.R
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 
-class UserAdapter(var userList: List<Results>) : RecyclerView.Adapter<UserAdapter.viewHolder>() {
+class UserAdapter(var userList: ArrayList<Results>) :
+    RecyclerView.Adapter<UserAdapter.viewHolder>(),
+    Filterable {
+
+    var userFilterList = ArrayList<Results>(userList)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): viewHolder {
         val view: View = LayoutInflater.from(parent.context).inflate(R.layout.items, parent, false)
@@ -43,6 +49,33 @@ class UserAdapter(var userList: List<Results>) : RecyclerView.Adapter<UserAdapte
         val userName: TextView = itemView.findViewById(R.id.user_name)
         val userEmail: TextView = itemView.findViewById(R.id.user_email)
         val userImage = itemView.findViewById<CircleImageView>(R.id.circleImageView)
+    }
+
+    override fun getFilter(): Filter = object : Filter() {
+        override fun performFiltering(constraint: CharSequence?): FilterResults {
+            val filteredList = ArrayList<Results>()
+
+            if (constraint == null || constraint.isEmpty()) {
+                filteredList.addAll(userFilterList)
+            } else {
+                val filteredStrings: String = constraint.toString().toLowerCase().trim()
+
+                for (results: Results in userFilterList) {
+                    val fullName = "${results.name.first} ${results.name.last}"
+                    if (fullName.toLowerCase().contains(filteredStrings)) {
+                        filteredList.add(results)
+                    }
+                }
+            }
+            return FilterResults().apply { values = filteredList }
+        }
+
+        override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+            userList.clear()
+            userList.addAll(results?.values as ArrayList<Results>)
+            notifyDataSetChanged()
+        }
+
     }
 
 }
