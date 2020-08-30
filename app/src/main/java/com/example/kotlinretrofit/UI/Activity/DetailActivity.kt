@@ -1,5 +1,6 @@
 package com.example.kotlinretrofit.UI.Activity
 
+import android.app.ActionBar
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -24,7 +25,7 @@ class DetailActivity : AppCompatActivity() {
 
         username_detail.text = "${results.name.first} ${results.name.last}"
         email_detail.text = results.email
-        Log.d("DetailActivity",results.email)
+        //Log.d("DetailActivity", results.email)
         address_detail.text = "${results.location.city} / ${results.location.state}"
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -46,5 +47,15 @@ class DetailActivity : AppCompatActivity() {
 
             })
 
+        supportActionBar?.title = "${results.name.first} ${results.name.last}"
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
     }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
+    }
+
 }
