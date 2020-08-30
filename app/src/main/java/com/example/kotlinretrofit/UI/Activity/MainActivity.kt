@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ImageView
 import android.widget.SearchView
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kotlinretrofit.Data.ApiClient
@@ -29,6 +31,7 @@ class MainActivity : AppCompatActivity(), UserAdapter.OnUserClickListener {
 
     companion object{
         const val EXTRA_RESULT_ITEM = "extra_result_item"
+        const val EXTRA_RESULT_TRANSITION_NAME = "extra_transition_name"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,9 +97,10 @@ class MainActivity : AppCompatActivity(), UserAdapter.OnUserClickListener {
         return return true
     }
 
-    override fun onUserClickListener(results: Results) {
+    override fun onUserClickListener(results: Results, sharedImageView: ImageView) {
         val intent = Intent(this, DetailActivity::class.java)
         intent.putExtra(EXTRA_RESULT_ITEM, results)
+        intent.putExtra(EXTRA_RESULT_TRANSITION_NAME, ViewCompat.getTransitionName(sharedImageView))
         startActivity(intent)
     }
 
