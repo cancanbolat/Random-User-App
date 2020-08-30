@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
@@ -44,7 +45,7 @@ class UserAdapter(var userList: ArrayList<Results>, var onUserClickListener: OnU
         ViewCompat.setTransitionName(holder.userImage, "${userList[position].name.first} ${userList[position].name.last}")
 
         holder.itemView.setOnClickListener {
-            onUserClickListener.onUserClickListener(userList[position])
+            onUserClickListener.onUserClickListener(userList[position], holder.userImage)
         }
 
     }
@@ -83,7 +84,7 @@ class UserAdapter(var userList: ArrayList<Results>, var onUserClickListener: OnU
     }
 
     interface OnUserClickListener{
-        fun onUserClickListener(results: Results)
+        fun onUserClickListener(results: Results, sharedImageView: ImageView)
     }
 
 }
