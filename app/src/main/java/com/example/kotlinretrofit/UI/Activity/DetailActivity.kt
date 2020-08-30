@@ -3,6 +3,7 @@ package com.example.kotlinretrofit.UI.Activity
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.example.kotlinretrofit.Model.Results
 import com.example.kotlinretrofit.R
 import com.squareup.picasso.Callback
@@ -22,7 +23,8 @@ class DetailActivity : AppCompatActivity() {
             intent.extras?.getSerializable(MainActivity.EXTRA_RESULT_ITEM) as Results
 
         username_detail.text = "${results.name.first} ${results.name.last}"
-        user_email.text = results.email
+        email_detail.text = results.email
+        Log.d("DetailActivity",results.email)
         address_detail.text = "${results.location.city} / ${results.location.state}"
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
