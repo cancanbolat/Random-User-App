@@ -1,6 +1,8 @@
 package com.example.kotlinretrofit.UI.Activity
 
+import android.app.ActivityOptions
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.SearchView
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,7 +32,7 @@ class MainActivity : AppCompatActivity(), UserAdapter.OnUserClickListener {
     private val apiClient: ApiService by lazy { ApiClient.getApiClient() }
     private lateinit var adapter: UserAdapter
 
-    companion object{
+    companion object {
         const val EXTRA_RESULT_ITEM = "extra_result_item"
         const val EXTRA_RESULT_TRANSITION_NAME = "extra_transition_name"
     }
@@ -101,7 +104,18 @@ class MainActivity : AppCompatActivity(), UserAdapter.OnUserClickListener {
         val intent = Intent(this, DetailActivity::class.java)
         intent.putExtra(EXTRA_RESULT_ITEM, results)
         intent.putExtra(EXTRA_RESULT_TRANSITION_NAME, ViewCompat.getTransitionName(sharedImageView))
-        startActivity(intent)
+
+        val options: ActivityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+            this,
+            sharedImageView,
+            ViewCompat.getTransitionName(sharedImageView)!!
+        )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            startActivity(intent, options.toBundle())
+        } else {
+            startActivity(intent)
+        }
     }
 
 }
