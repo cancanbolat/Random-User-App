@@ -1,5 +1,6 @@
 package com.example.kotlinretrofit.UI.Activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kotlinretrofit.Data.ApiClient
 import com.example.kotlinretrofit.Data.ApiService
+import com.example.kotlinretrofit.Model.Results
 import com.example.kotlinretrofit.Model.UserResponse
 import com.example.kotlinretrofit.R
 import com.example.kotlinretrofit.UI.Adapter.UserAdapter
@@ -20,10 +22,14 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), UserAdapter.OnUserClickListener {
 
     private val apiClient: ApiService by lazy { ApiClient.getApiClient() }
     private lateinit var adapter: UserAdapter
+
+    companion object{
+        const val EXTRA_RESULT_ITEM = "extra_result_item"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +62,7 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
                 //System.out.println("gelen => "+response.body()?.userList?.size.toString())
                 if (response.isSuccessful) {
-                    adapter = UserAdapter(response.body()?.userList!!)
+                    adapter = UserAdapter(response.body()?.userList!!, this@MainActivity)
                     recycler_view.adapter = adapter
                     progressBar.gone()
                     recycler_view.visible()
@@ -86,6 +92,12 @@ class MainActivity : AppCompatActivity() {
         })
 
         return return true
+    }
+
+    override fun onUserClickListener(results: Results) {
+        val intent = Intent(this, DetailActivity::class.java)
+        intent.putExtra(EXTRA_RESULT_ITEM, results)
+        startActivity(intent)
     }
 
 }
