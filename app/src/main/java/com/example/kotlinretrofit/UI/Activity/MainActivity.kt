@@ -23,6 +23,7 @@ import retrofit2.Response
 class MainActivity : AppCompatActivity() {
 
     private val apiClient: ApiService by lazy { ApiClient.getApiClient() }
+    private lateinit var adapter: UserAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,12 +38,12 @@ class MainActivity : AppCompatActivity() {
 
         swiperefresh.setOnRefreshListener { getUsers() }
 
-        TODO("Double click back to exit app")
-        TODO("Clear app cache button")
-        TODO("Use LottieAnimationView")
-        TODO("Use Slidableactivity")
-        TODO("Use SliderAdapter & PagerAdapter -> SplashScreen")
-        TODO("Internet control")
+        // TODO("Double click back to exit app")
+        // TODO("Clear app cache button")
+        // TODO("Use LottieAnimationView")
+        // TODO("Use Slidableactivity")
+        // TODO("Use SliderAdapter & PagerAdapter -> SplashScreen")
+        // TODO("Internet control")
 
     }
 
@@ -55,7 +56,8 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
                 //System.out.println("gelen => "+response.body()?.userList?.size.toString())
                 if (response.isSuccessful) {
-                    recycler_view.adapter = UserAdapter(response.body()?.userList!!)
+                    adapter = UserAdapter(response.body()?.userList!!)
+                    recycler_view.adapter = adapter
                     progressBar.gone()
                     recycler_view.visible()
                     swiperefresh.isRefreshing = false
@@ -70,12 +72,14 @@ class MainActivity : AppCompatActivity() {
         val searchItem: MenuItem? = menu?.findItem(R.id.action_search)
         val searchView: SearchView = searchItem?.actionView as SearchView
 
-        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
+                adapter.getFilter().filter(query)
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
+                adapter.getFilter().filter(newText)
                 return false
             }
 
