@@ -1,15 +1,15 @@
 package com.example.kotlinretrofit.UI.Activity
 
-import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.SearchView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -28,6 +28,9 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity(), UserAdapter.OnUserClickListener {
+
+    private var backPressedTime: Long = 0
+    private lateinit var toast: Toast
 
     private val apiClient: ApiService by lazy { ApiClient.getApiClient() }
     private lateinit var adapter: UserAdapter
@@ -50,8 +53,6 @@ class MainActivity : AppCompatActivity(), UserAdapter.OnUserClickListener {
 
         swiperefresh.setOnRefreshListener { getUsers() }
 
-        // TODO("Double click back to exit app")
-        // TODO("Clear app cache button")
         // TODO("Use LottieAnimationView")
         // TODO("Use Slidableactivity")
         // TODO("Use SliderAdapter & PagerAdapter -> SplashScreen")
@@ -116,6 +117,19 @@ class MainActivity : AppCompatActivity(), UserAdapter.OnUserClickListener {
         } else {
             startActivity(intent)
         }
+    }
+
+    override fun onBackPressed() {
+        if (backPressedTime + 2000 > System.currentTimeMillis()) {
+            toast.cancel()
+            super.onBackPressed()
+            return
+        } else {
+            toast = Toast.makeText(this, "Tap 1 more time to exit", Toast.LENGTH_SHORT)
+            toast.show()
+        }
+        backPressedTime = System.currentTimeMillis()
+
     }
 
 }
