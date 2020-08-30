@@ -13,6 +13,7 @@ import android.widget.Filterable
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlinretrofit.Model.Results
 import com.example.kotlinretrofit.R
@@ -35,7 +36,12 @@ class UserAdapter(var userList: ArrayList<Results>, var onUserClickListener: OnU
     override fun onBindViewHolder(holder: viewHolder, position: Int) {
         holder.userName.text = "${userList[position].name.first} ${userList[position].name.last}"
         holder.userEmail.text = userList[position].email
-        Picasso.get().load(userList[position].picture.large).into(holder.userImage)
+        Picasso.get()
+            .load(userList[position].picture.large)
+            .placeholder(R.mipmap.ic_launcher)
+            .into(holder.userImage)
+
+        ViewCompat.setTransitionName(holder.userImage, "${userList[position].name.first} ${userList[position].name.last}")
 
         holder.itemView.setOnClickListener {
             onUserClickListener.onUserClickListener(userList[position])
