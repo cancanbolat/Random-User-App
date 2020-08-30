@@ -26,6 +26,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 
 class MainActivity : AppCompatActivity(), UserAdapter.OnUserClickListener {
 
@@ -119,9 +120,18 @@ class MainActivity : AppCompatActivity(), UserAdapter.OnUserClickListener {
         }
     }
 
+    private fun deleteAppData() {
+        try {
+            Runtime.getRuntime().exec("pm clear " + packageName)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     override fun onBackPressed() {
         if (backPressedTime + 2000 > System.currentTimeMillis()) {
             toast.cancel()
+            deleteAppData()
             super.onBackPressed()
             return
         } else {
