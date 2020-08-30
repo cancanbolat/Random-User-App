@@ -19,7 +19,7 @@ import com.example.kotlinretrofit.R
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 
-class UserAdapter(var userList: ArrayList<Results>) :
+class UserAdapter(var userList: ArrayList<Results>, var onUserClickListener: OnUserClickListener) :
     RecyclerView.Adapter<UserAdapter.viewHolder>(),
     Filterable {
 
@@ -38,9 +38,7 @@ class UserAdapter(var userList: ArrayList<Results>) :
         Picasso.get().load(userList[position].picture.large).into(holder.userImage)
 
         holder.itemView.setOnClickListener {
-            System.out.println("click")
-            TODO("Open the user detail page when clicked. Use sharedPreferences.")
-            TODO("Copy user name and user email when clicked")
+            onUserClickListener.onUserClickListener(userList[position])
         }
 
     }
@@ -76,6 +74,10 @@ class UserAdapter(var userList: ArrayList<Results>) :
             notifyDataSetChanged()
         }
 
+    }
+
+    interface OnUserClickListener{
+        fun onUserClickListener(results: Results)
     }
 
 }
