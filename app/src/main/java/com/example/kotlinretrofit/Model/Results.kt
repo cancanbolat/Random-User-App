@@ -1,6 +1,7 @@
 package com.example.kotlinretrofit.Model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class Results (
     @SerializedName("gender")
@@ -18,4 +19,4 @@ data class Results (
     @SerializedName("picture")
     var picture: Picture
 
-    )
+    ): Serializable
